@@ -111,38 +111,20 @@ public class RSSManager {
 														RSSObject rssObject = new RSSObject(pid, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", ""), entry.getUri(), entry.getLink(), entry.getPublishedDate().toString(), description, content, detector.detect(), contentsLink.get(i+1), contentsLink.get(i+1), new Date().toString());
 														myNewMap.put(pid, rssObject);
 														System.out.println("\t"+pid);
-													} catch (LangDetectException e) {
-														e.printStackTrace();
-													}
-												} catch (Exception e) {
-													e.printStackTrace();
-												}
+													} catch (LangDetectException e) {}
+												} catch (Exception e) {}
 											}
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
+										} catch (Exception e) {}
 									}
-								} catch (LangDetectException e) {
-									e.printStackTrace();
-								}
-							} catch (IllegalArgumentException e) {
-								e.printStackTrace();
-							} catch (FeedException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}  
-						} catch (IOException e) {
-							e.printStackTrace();
-						}  
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					}
+								} catch (LangDetectException e) {}
+							} catch (IllegalArgumentException e) {} 
+							catch (FeedException e) {} 
+							catch (IOException e) {}  
+						} catch (IOException e) {}  
+					} catch (MalformedURLException e) {}
 					System.out.println("fin : "+contentLink);
 				}
-			} catch (LangDetectException e) {
-				e.printStackTrace();
-			}
+			} catch (LangDetectException e) {}
 			
 			/* Sauvegarde des nouveaux objets */
 			textFileIndexer.index(myNewMap);

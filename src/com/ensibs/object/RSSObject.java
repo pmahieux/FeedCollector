@@ -10,37 +10,37 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class RSSObject implements Serializable {
 
-	/** pid unique */
+	/* pid unique */
 	private String pid;
 
-	/** titre de l'objet RSS  */
+	/* titre de l'objet RSS  */
 	private String title;
 
-	/** lien de la source */
+	/* lien de la source */
 	private String linkSource;
 
-	/** lien de la page */
+	/* lien de la page */
 	private String linkPage;
 
-	/** derniere date de modification */
+	/* derniere date de modification */
 	private String lastUpdate;
 
-	/** description du flux */
+	/* description du flux */
 	private String description;
 
-	/** contenu du flux */
+	/* contenu du flux */
 	private String content;
 
-	/** langue de la page */
+	/* langue de la page */
 	private String language;
 	
-	/** categorie du flux */
+	/* categorie du flux */
 	private String streamCategory;
 	
-	/** categorie predite */
+	/* categorie predite */
 	private String predictCategory;
 	
-	/** date de collecte */
+	/* date de collecte */
 	private String lastCheck; 
 
 	/**

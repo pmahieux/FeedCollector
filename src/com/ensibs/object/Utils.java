@@ -11,6 +11,9 @@ import org.apache.tika.Tika;
 
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
+/**
+ * Classe contenant differentes fonctions necessaires pour l'indexeur
+ */
 public class Utils {
 
 	/**
