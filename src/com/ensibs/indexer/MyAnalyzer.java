@@ -15,8 +15,8 @@ public class MyAnalyzer extends Analyzer {
 
 	@Override
 	protected TokenStreamComponents createComponents(final String field,
-			final Reader reader) {
-		
+			final Reader reader) { 
+		String a;
 		Tokenizer tokenizer = new StandardTokenizer(reader);
 		TokenStream filter = new StandardFilter(tokenizer);		
 		filter = new LowerCaseFilter(filter);
