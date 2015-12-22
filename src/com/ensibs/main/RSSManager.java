@@ -25,7 +25,7 @@ import com.sun.syndication.io.XmlReader;
 
 /**
  * Classe principale decrivant la liste des flux RSS stockes dans un fichier .txt.
- * Tous les contenus sont stockes dans un dataDB
+ * Tous les contenus sont stockes dans Lucene
  * @author Pascal Mahieux et Maxime Jeusselin
  * @version 1.0
  */
