@@ -1,8 +1,19 @@
 package com.ensibs.indexer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -23,6 +34,16 @@ import org.apache.lucene.util.Version;
  * This terminal application creates an Apache Lucene index in a folder and adds files into this index
  * based on the input of the user.
  */
+
+
+
+
+
+
+
+
+
+
 
 
 import com.ensibs.object.RSSObject;
@@ -126,7 +147,7 @@ public class TextFileIndexer {
 	public void searchIndex(String searchString) throws IOException {
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexLocation)));
 		IndexSearcher searcher = new IndexSearcher(reader);
-		
+
 		try {
 			System.out.println("Query="+searchString);
 			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(new String[]{"title","description","content"}, analyzer);
@@ -148,6 +169,36 @@ public class TextFileIndexer {
 			System.out.println("Error searching " + searchString + " : " + e.getMessage());
 		}
 	}
+
+	/**
+	 * Permet de stemmer une chaîne
+	 * @param language
+	 * @param text
+	 * @return texte stemmé
+	 */
+	public String stem(String language, String text){
+		try{
+			Class stemClass;
+			stemClass = Class.forName("com.ensibs.indexer.ext." +
+					language + "Stemmer");
+
+			SnowballStemmer stemmer;
+			stemmer = (SnowballStemmer) stemClass.newInstance();
+			List<String> wordList = Arrays.asList(text.split(" "));
+			for(String word : wordList){
+				stemmer.setCurrent(word);
+				stemmer.stem();
+				text = text.replaceAll(word, stemmer.getCurrent());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+
+		return text;
+
+	}
+
 
 
 	/**
