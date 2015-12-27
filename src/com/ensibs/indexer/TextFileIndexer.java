@@ -1,20 +1,16 @@
 package com.ensibs.indexer;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -37,15 +33,6 @@ import org.apache.lucene.util.Version;
 
 
 
-
-
-
-
-
-
-
-
-
 import com.ensibs.object.RSSObject;
 
 /**
@@ -59,6 +46,7 @@ public class TextFileIndexer {
 	private Analyzer analyzer = new MyAnalyzer();
 	private IndexWriter writer;
 	private String indexLocation;
+	private HashMap<String,ArrayList<String>> stopwords;
 
 	/**
 	 * Constructor
@@ -77,6 +65,24 @@ public class TextFileIndexer {
 			writer = new IndexWriter(dir, config);
 		}catch(IOException e){
 			e.printStackTrace();
+		}
+		//Création des stopwords
+		stopwords = new HashMap<String, ArrayList<String>>();
+		File directory = new File("." + File.separator + "resources" + File.separator + "stopwords");
+		for(File f : directory.listFiles()){			
+			try {
+				BufferedReader buff;
+				buff = new BufferedReader(new FileReader(f.getAbsolutePath()));
+				String stopword;
+				ArrayList<String> listStopwords = new ArrayList<String>();
+				while((stopword = buff.readLine()) != null){
+					listStopwords.add(stopword);
+				}
+				stopwords.put(f.getName(), listStopwords);
+				buff.close();
+			} catch (IOException e) {				
+				e.printStackTrace();
+			}			
 		}
 	}
 
@@ -171,12 +177,12 @@ public class TextFileIndexer {
 	}
 
 	/**
-	 * Permet de stemmer une chaîne
+	 * Permet de stemmer une chaîne et de supprimer les stopwords
 	 * @param language
 	 * @param text
-	 * @return texte stemmé
+	 * @return texte segmenté
 	 */
-	public String stem(String language, String text){
+	public String segment(String language, String text){
 		try{
 			Class stemClass;
 			stemClass = Class.forName("com.ensibs.indexer.ext." +
@@ -185,16 +191,28 @@ public class TextFileIndexer {
 			SnowballStemmer stemmer;
 			stemmer = (SnowballStemmer) stemClass.newInstance();
 			List<String> wordList = Arrays.asList(text.split(" "));
+			ArrayList<String> sw = stopwords.get(language);
 			for(String word : wordList){
-				stemmer.setCurrent(word);
-				stemmer.stem();
-				text = text.replaceAll(word, stemmer.getCurrent());
+				if(!sw.isEmpty()){
+					if(sw.contains(word)){
+						//Suppression du stopword dans le texte
+						text = text.replaceFirst(word + " ", "");
+					}else{						
+						try{
+							//Stem du mot
+							stemmer.setCurrent(word);
+							stemmer.stem();
+							text = text.replace(word, stemmer.getCurrent());
+						}catch(PatternSyntaxException e){
+							
+						}
+						
+					}
+				}				
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
-
 		return text;
 
 	}

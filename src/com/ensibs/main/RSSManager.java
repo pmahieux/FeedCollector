@@ -109,9 +109,11 @@ public class RSSManager {
 
 													/* On stocke l'objet RSS */
 													try {	
-														RSSObject rssObject = new RSSObject(pid, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", ""), entry.getUri(), entry.getLink(), entry.getPublishedDate().toString(), textFileIndexer.stem(detector.detect(),description), content, detector.detect(), contentsLink.get(i+1), contentsLink.get(i+1), new Date().toString());
+														String language = detector.detect();
+														RSSObject rssObject = new RSSObject(pid, textFileIndexer.segment(language, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", "")), entry.getUri(), entry.getLink(), entry.getPublishedDate().toString(), textFileIndexer.segment(language,description), textFileIndexer.segment(language,content), language, contentsLink.get(i+1), contentsLink.get(i+1), new Date().toString());
 														myNewMap.put(pid, rssObject);
 														System.out.println("\t"+pid);
+														//System.out.println(textFileIndexer.segment(language,content));
 													} catch (LangDetectException e) {}
 												} catch (Exception e) {}
 											}
