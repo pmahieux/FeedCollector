@@ -63,6 +63,7 @@ public class RSSManager {
 					String contentLink = contentsLink.get(i);
 					System.out.println("debut : "+contentLink);
 					URL url = null;
+					
 					try {
 						url = new URL(contentLink);
 
@@ -91,7 +92,7 @@ public class RSSManager {
 										String pid = null;
 										try {
 											pid = Utils.getHashCode(entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", "") + entry.getLink());
-
+											
 											/* On verifie si le pid existe ou non, s'il n'existe pas, on stocke l'objet rss */
 											if(!myOriginalMap.containsKey(pid)){
 												String description = "";
@@ -108,9 +109,11 @@ public class RSSManager {
 
 													/* On stocke l'objet RSS */
 													try {	
-														RSSObject rssObject = new RSSObject(pid, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", ""), entry.getUri(), entry.getLink(), entry.getPublishedDate().toString(), description, content, detector.detect(), contentsLink.get(i+1), contentsLink.get(i+1), new Date().toString());
+														String language = detector.detect();
+														RSSObject rssObject = new RSSObject(pid, textFileIndexer.segment(language, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", "")), entry.getUri(), entry.getLink(), entry.getPublishedDate().toString(), textFileIndexer.segment(language,description), textFileIndexer.segment(language,content), language, contentsLink.get(i+1), contentsLink.get(i+1), new Date().toString());
 														myNewMap.put(pid, rssObject);
 														System.out.println("\t"+pid);
+														//System.out.println(textFileIndexer.segment(language,content));
 													} catch (LangDetectException e) {}
 												} catch (Exception e) {}
 											}
@@ -127,7 +130,8 @@ public class RSSManager {
 			} catch (LangDetectException e) {}
 			
 			/* Sauvegarde des nouveaux objets */
-			textFileIndexer.index(myNewMap);
+			
+			//textFileIndexer.index(myNewMap);
 		}
 	}
 }
