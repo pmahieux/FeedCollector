@@ -24,7 +24,7 @@ import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
 /**
- * Classe principale decrivant la liste des flux RSS stockes dans un fichier .txt.
+ * Classe principale decrivant la liste des flux RSS stockes avec lucene dans un dossier learning
  * Tous les contenus sont stockes dans Lucene
  * @author Pascal Mahieux et Maxime Jeusselin
  * @version 1.0
@@ -39,11 +39,11 @@ public class RSSManager {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException{
 		
-		/* Indexer pour stocker et recuperer les objets RSSObject */
-		TextFileIndexer textFileIndexer = new TextFileIndexer("." + File.separator + "save" + File.separator + "learning");
-		
 		/* Le fichier contenant les flux d'apprentissage en parametre */
 		if(args.length > 0) {
+			
+			/* Indexer pour stocker et recuperer les objets RSSObject */
+			TextFileIndexer textFileIndexer = new TextFileIndexer("." + File.separator + "save" + File.separator + "learning");
 			
 			/* map correspondant aux objets recuperes */
 			HashMap<String, RSSObject> myOriginalMap = new HashMap<String, RSSObject>(textFileIndexer.readDB());
@@ -110,10 +110,19 @@ public class RSSManager {
 													/* On stocke l'objet RSS */
 													try {	
 														String language = detector.detect();
-														RSSObject rssObject = new RSSObject(pid, textFileIndexer.segment(language, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", "")), entry.getUri(), entry.getLink(), entry.getPublishedDate().toString(), textFileIndexer.segment(language,description), textFileIndexer.segment(language,content), language, contentsLink.get(i+1), contentsLink.get(i+1), new Date().toString());
+														RSSObject rssObject = new RSSObject(
+																pid,
+																textFileIndexer.segment(language, entry.getTitle().replaceAll("\\n", "").replaceAll("\\t", "")),
+																entry.getUri(),
+																entry.getLink(),
+																entry.getPublishedDate().toString(),
+																textFileIndexer.segment(language,description),
+																textFileIndexer.segment(language,content),
+																language, contentsLink.get(i+1),
+																contentsLink.get(i+1),
+																new Date().toString());
 														myNewMap.put(pid, rssObject);
 														System.out.println("\t"+pid);
-														//System.out.println(textFileIndexer.segment(language,content));
 													} catch (LangDetectException e) {}
 												} catch (Exception e) {}
 											}
@@ -130,8 +139,7 @@ public class RSSManager {
 			} catch (LangDetectException e) {}
 			
 			/* Sauvegarde des nouveaux objets */
-			
-			//textFileIndexer.index(myNewMap);
+			textFileIndexer.index(myNewMap);
 		}
 	}
 }

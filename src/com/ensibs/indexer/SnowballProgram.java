@@ -378,6 +378,7 @@ public class SnowballProgram {
 	}
 
 	/* Copy the slice into the supplied StringBuffer */
+	@SuppressWarnings("unused")
 	protected StringBuffer slice_to(StringBuffer s)
 	{
 		slice_check();
@@ -387,6 +388,7 @@ public class SnowballProgram {
 	}
 
 	/* Copy the slice into the supplied StringBuilder */
+	@SuppressWarnings("unused")
 	protected StringBuilder slice_to(StringBuilder s)
 	{
 		slice_check();

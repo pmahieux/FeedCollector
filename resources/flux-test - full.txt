@@ -1,3 +1,4 @@
+http://www.france24.com/en/timeline/rss GENERALISTE
 http://rss.cnn.com/rss/edition_world.rss GENERALISTE
 http://www.abc.net.au/news/feed/52278/rss.xml  GENERALISTE
 http://feeds.washingtonpost.com/rss/world GENERALISTE

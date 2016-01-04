@@ -32,12 +32,14 @@ import org.apache.lucene.util.Version;
 
 
 
+
 import com.ensibs.object.RSSObject;
 
 /**
  * 
  * SNOWBALL
- *
+ * @author Pascal Mahieux et Maxime Jeusselin
+ * @version 1.0
  */
 public class TextFileIndexer {
 
@@ -175,11 +177,17 @@ public class TextFileIndexer {
 		}
 	}
 	
+	/**
+	 * Recuperer la meilleure categorie d'un contenu a partir de la BDD 
+	 * @param content contenu permettant de trouver sa categorie
+	 * @return la meilleure categorie
+	 * @throws IOException
+	 */
 	public String getBestCategory(String content) throws IOException {
 		IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexLocation)));
 		IndexSearcher searcher = new IndexSearcher(reader);
 
-		String category = "NONE";
+		String category = null;
 		
 		try {
 			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(new String[]{"title","description","content"}, analyzer);
@@ -187,12 +195,15 @@ public class TextFileIndexer {
 			TopDocs hits =searcher.search(query, 10);
 			// 4. display results
 
-			
+			/* score maximal */
 			float maxScore = 0;
 			
 			for(int i=0;i<hits.scoreDocs.length;++i) {
 				int docId = hits.scoreDocs[i].doc;
 				Document d = searcher.doc(docId);
+				
+				/* Si le score maximal est inferieur au score du document, 
+				 * on stocke le score de ce document ainsi que sa categorie */
 				if(hits.scoreDocs[i].score / hits.getMaxScore()> maxScore){
 					maxScore = hits.scoreDocs[i].score / hits.getMaxScore();
 					category = d.get("predictCategory");
@@ -209,6 +220,7 @@ public class TextFileIndexer {
 	 * @param text
 	 * @return texte segmenté
 	 */
+	@SuppressWarnings("rawtypes")
 	public String segment(String language, String text){
 		try{
 			Class stemClass;

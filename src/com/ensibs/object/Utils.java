@@ -13,6 +13,8 @@ import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
 /**
  * Classe contenant differentes fonctions necessaires pour l'indexeur
+ * @author Pascal Mahieux et Maxime Jeusselin
+ * @version 1.0
  */
 public class Utils {
 

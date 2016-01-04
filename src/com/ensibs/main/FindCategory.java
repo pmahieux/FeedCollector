@@ -36,7 +36,7 @@ import com.sun.syndication.io.XmlReader;
  * par rapport aux contenus de la BDD. Cette categorie predite pour ce contenu est stockee dans une liste.
  * A la fin du parcours des contenus du flux, on prend la categorie presente le plus de fois la liste
  * et on l'affecte aux objets RSSObject
- * Pour finir ces flux avec une categorie predite sont stockes dans un dossier prediction pour
+ * Pour finir ces flux avec une categorie predite sont stockes avec lucene dans un dossier prediction pour
  * separer le contenu de la BDD et ceux-ci.
  * @author Pascal Mahieux et Maxime Jeusselin
  * @version 1.0
@@ -51,14 +51,14 @@ public class FindCategory {
 	@SuppressWarnings({ "unchecked" })
 	public static void main(String[] args) throws IOException{
 
-		/* Indexer pour recuperer les objets RSSObject */
-		TextFileIndexer indexergetData = new TextFileIndexer("." + File.separator + "save" + File.separator + "learning");
-
-		/* Indexer pour stocker les flux avec la categorie predite */
-		TextFileIndexer indexerSaveData = new TextFileIndexer("." + File.separator + "save" + File.separator + "prediction");
-
-		/* Le fichier contenant les flux d'apprentissage en parametre */
+		/* Le fichier contenant les flux avec une categorie inconnue en parametre */
 		if(args.length > 0) {
+
+			/* Indexer pour recuperer les objets RSSObject */
+			TextFileIndexer indexergetData = new TextFileIndexer("." + File.separator + "save" + File.separator + "learning");
+
+			/* Indexer pour stocker les flux avec la categorie predite */
+			TextFileIndexer indexerSaveData = new TextFileIndexer("." + File.separator + "save" + File.separator + "prediction");
 
 			/* map correspondant aux objets a stocker */
 			HashMap<String, RSSObject> myNewMap = new HashMap<String, RSSObject>();			
@@ -124,7 +124,7 @@ public class FindCategory {
 												String category = null;
 												try {
 													category = indexergetData.getBestCategory(content);
-													if(category != null && category != "NONE"){
+													if(category != null){
 														
 														System.out.println("Stockage categorie");
 														if(categoriesPrediction.get(category) != null) {
