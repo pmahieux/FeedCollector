@@ -161,7 +161,9 @@ public class TextFileIndexer {
 			Query query = queryParser.parse(searchString);
 			TopDocs hits =searcher.search(query, 10);
 			// 4. display results
-
+			if(hits.scoreDocs.length == 0){
+				System.out.println("Mot introuvable");
+			}
 			for(int i=0;i<hits.scoreDocs.length;++i) {
 				int docId = hits.scoreDocs[i].doc;
 				Document d = searcher.doc(docId);
