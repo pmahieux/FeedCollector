@@ -33,7 +33,7 @@ public class RSSManager {
 
 	/**
 	 * Fonction principale
-	 * @param args n'est pas utilise
+	 * @param args fichier soumis avec des flux pour stocker tous les contenus
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")

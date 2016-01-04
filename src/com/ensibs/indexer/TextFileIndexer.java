@@ -2,7 +2,6 @@ package com.ensibs.indexer;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,6 +173,34 @@ public class TextFileIndexer {
 		} catch (Exception e) {
 			System.out.println("Error searching " + searchString + " : " + e.getMessage());
 		}
+	}
+	
+	public String getBestCategory(String content) throws IOException {
+		IndexReader reader = DirectoryReader.open(FSDirectory.open(new File(indexLocation)));
+		IndexSearcher searcher = new IndexSearcher(reader);
+
+		String category = "NONE";
+		
+		try {
+			MultiFieldQueryParser queryParser = new MultiFieldQueryParser(new String[]{"title","description","content"}, analyzer);
+			Query query = queryParser.parse(content);
+			TopDocs hits =searcher.search(query, 10);
+			// 4. display results
+
+			
+			float maxScore = 0;
+			
+			for(int i=0;i<hits.scoreDocs.length;++i) {
+				int docId = hits.scoreDocs[i].doc;
+				Document d = searcher.doc(docId);
+				if(hits.scoreDocs[i].score / hits.getMaxScore()> maxScore){
+					maxScore = hits.scoreDocs[i].score / hits.getMaxScore();
+					category = d.get("predictCategory");
+				}
+			}
+		} catch (Exception e) {}
+		
+		return category;
 	}
 
 	/**
